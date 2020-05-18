@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Jinja
+{% endblock %}
+
+{% block main %}
+    {#
+        multiline comment
+        {% statement %}
+        # single line comment #
+        {{ expression }}
+    #}
+
+    <h1>Your name is: {{ name }}</h1>
+
+    {% if num == 10 %}
+        <h1>Yeah, the number is 10!</h1>
+    {% elif num == 5 %}
+        <h1>Nope, the number is NOT 10 BUT 5.</h1>
+    {% else %}
+        <h1>Nope, the number is NOT 10!</h1>
+    {% endif %}
+
+    <ul>
+        {% for number in numbers %}
+            <li>{{ number }}</li>
+        {% endfor %}
+    </ul>
+
+    <ol>
+        {% for key, value in fruits.items() %}
+            <li>{{ key }} is {{ value }}</li>
+        {% endfor %}
+    </ol>
+
+    <h1>Current date: {{ date|dateformat }}</h1>
+{% endblock %}
