@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from jinja2 import environment
+import csv
 app = Flask(__name__)
 
 
@@ -47,3 +48,47 @@ def jinja_demo():
     numbers = [1, 2, 3, 4, 5, 6]
     fruits = {"apple": "red", "banana": "yellow", "orange": "orange"}
     return render_template("jinja.html", name=name, num=num, numbers=numbers, fruits=fruits, date=datetime.datetime.now())
+
+
+######
+# Tutorial #4
+######
+
+# GET POST
+
+@app.route("/forms", methods=["GET", "POST"])
+def forms():
+    if request.method == "POST":
+        with open("user.csv", "a") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=["username", "password"])
+            writer.writerow({"username": request.form.get("username"), "password": request.form.get("password")})
+        return "success"
+
+    if request.args.get("username"):
+        return str(request.args.get("username"))
+
+    return render_template("forms.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        with open("user.csv", "r") as csvfile:
+            csv_reader = csv.reader(csvfile, delimiter=',')
+            for row in csv_reader:
+                if row[0] == request.form.get("username") and row[1] == request.form.get("password"):
+                    return "you're logged in!"
+            return "wrong credentials"
+    else:
+        return render_template("forms.html")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        with open("user.csv", "a") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=["username", "password"])
+            writer.writerow({"username": request.form.get("username"), "password": request.form.get("password")})
+        return "successfully registered"
+    else:
+        return render_template("forms.html")
