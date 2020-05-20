@@ -92,3 +92,12 @@ def register():
         return "successfully registered"
     else:
         return render_template("forms.html")
+
+######
+# Tutorial #4
+######
+
+import sqlite3
+
+conn = sqlite3.connect("example.sqlite3", check_same_thread=False)
+c = conn.cursor()
