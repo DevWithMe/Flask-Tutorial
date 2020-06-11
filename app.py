@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash, redirect, url_for, abort
 from jinja2 import environment
 import csv
 app = Flask(__name__)
 
-
+app.config["SECRET_KEY"] = "secretkey"
 
 ##########
 # Tutorial #1
@@ -78,7 +78,8 @@ def login():
             for row in csv_reader:
                 if row[0] == request.form.get("username") and row[1] == request.form.get("password"):
                     return "you're logged in!"
-            return "wrong credentials"
+            flash("Wrong Credentials", category="danger")
+            return redirect(url_for("index"))
     else:
         return render_template("forms.html")
 
@@ -101,3 +102,16 @@ import sqlite3
 
 conn = sqlite3.connect("example.sqlite3", check_same_thread=False)
 c = conn.cursor()
+
+######
+# Tutorial #23(?)
+######
+
+@app.route("/adminonly")
+def adminonly():
+    return [0, 1, 2, 3][70]
+    # abort(403)
+
+@app.errorhandler(IndexError)
+def no_permission(e):
+    return "You don't have permission to view this page", 403
